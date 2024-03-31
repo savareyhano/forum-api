@@ -44,6 +44,11 @@ describe('ReplyRepositoryPostgres', () => {
       // Action & Assert
       await expect(replyRepositoryPostgres.verifyReply(threadId, commentId, replyId))
         .resolves.not.toThrowError(NotFoundError);
+      const replies = await RepliesTableTestHelper.findRepliesById(replyId);
+      expect(replies).toHaveLength(1);
+      expect(replies[0].id).toEqual(replyId);
+      expect(replies[0].thread_id).toEqual(threadId);
+      expect(replies[0].comment_id).toEqual(commentId);
     });
   });
 
@@ -63,6 +68,12 @@ describe('ReplyRepositoryPostgres', () => {
       await expect(
         replyRepositoryPostgres.verifyReplyOwner(threadId, commentId, replyId, credentialId),
       ).rejects.toThrowError(AuthorizationError);
+      const replies = await RepliesTableTestHelper.findRepliesById(replyId);
+      expect(replies).toHaveLength(1);
+      expect(replies[0].id).toEqual(replyId);
+      expect(replies[0].thread_id).toEqual(threadId);
+      expect(replies[0].comment_id).toEqual(commentId);
+      expect(replies[0].owner).toEqual('user-789');
     });
 
     it('should not throw AuthorizationError when the reply does belong to the user', async () => {
@@ -80,22 +91,28 @@ describe('ReplyRepositoryPostgres', () => {
       await expect(
         replyRepositoryPostgres.verifyReplyOwner(threadId, commentId, replyId, credentialId),
       ).resolves.not.toThrowError(AuthorizationError);
+      const replies = await RepliesTableTestHelper.findRepliesById(replyId);
+      expect(replies).toHaveLength(1);
+      expect(replies[0].id).toEqual(replyId);
+      expect(replies[0].thread_id).toEqual(threadId);
+      expect(replies[0].comment_id).toEqual(commentId);
+      expect(replies[0].owner).toEqual(credentialId);
     });
   });
 
   describe('addReply function', () => {
     it('should persist new reply and return added reply correctly', async () => {
       // Arrange
-      await ThreadsTableTestHelper.addThread({ title: 'test' });
-      await CommentsTableTestHelper.addComment({ content: 'testing' });
+      const threadId = 'thread-234';
+      const commentId = 'comment-234';
+      await ThreadsTableTestHelper.addThread({ id: threadId, title: 'test' });
+      await CommentsTableTestHelper.addComment({ id: commentId, content: 'testing' });
       const newReply = new NewReply({
         content: 'testing',
       });
       const fakeIdGenerator = () => '123'; // stub!
       const replyRepositoryPostgres = new ReplyRepositoryPostgres(pool, fakeIdGenerator);
       const credentialId = 'user-123';
-      const threadId = 'thread-123';
-      const commentId = 'comment-123';
 
       // Action
       await replyRepositoryPostgres.addReply(threadId, commentId, newReply, credentialId);
@@ -103,20 +120,25 @@ describe('ReplyRepositoryPostgres', () => {
       // Assert
       const replies = await RepliesTableTestHelper.findRepliesById('reply-123');
       expect(replies).toHaveLength(1);
+      expect(replies[0].id).toEqual('reply-123');
+      expect(replies[0].thread_id).toEqual(threadId);
+      expect(replies[0].comment_id).toEqual(commentId);
+      expect(replies[0].owner).toEqual(credentialId);
+      expect(replies[0].content).toEqual('testing');
     });
 
     it('should return added reply correctly', async () => {
       // Arrange
-      await ThreadsTableTestHelper.addThread({ title: 'test' });
-      await CommentsTableTestHelper.addComment({ content: 'testing' });
+      const threadId = 'thread-234';
+      const commentId = 'comment-234';
+      await ThreadsTableTestHelper.addThread({ id: threadId, title: 'test' });
+      await CommentsTableTestHelper.addComment({ id: commentId, content: 'testing' });
       const newReply = new NewReply({
         content: 'testing',
       });
       const fakeIdGenerator = () => '123'; // stub!
       const replyRepositoryPostgres = new ReplyRepositoryPostgres(pool, fakeIdGenerator);
       const credentialId = 'user-123';
-      const threadId = 'thread-123';
-      const commentId = 'comment-123';
 
       // Action
       const addedReply = await replyRepositoryPostgres.addReply(
@@ -139,9 +161,9 @@ describe('ReplyRepositoryPostgres', () => {
     it('should set column is_delete to true from database', async () => {
       // Arrange
       const replyRepository = new ReplyRepositoryPostgres(pool);
-      const threadId = 'thread-123';
-      const commentId = 'comment-123';
-      const replyId = 'reply-123';
+      const threadId = 'thread-234';
+      const commentId = 'comment-234';
+      const replyId = 'reply-234';
       await RepliesTableTestHelper.addReply({ id: replyId, threadId, commentId });
 
       // Action

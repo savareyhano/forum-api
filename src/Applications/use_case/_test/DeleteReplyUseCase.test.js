@@ -33,6 +33,10 @@ describe('DeleteReplyUseCase', () => {
     await deleteReplyUseCase.execute(threadId, commentId, replyId, credentialId);
 
     // Assert
+    expect(mockThreadRepository.verifyThread)
+      .toHaveBeenCalledWith(threadId);
+    expect(mockCommentRepository.verifyComment)
+      .toHaveBeenCalledWith(threadId, commentId);
     expect(mockReplyRepository.verifyReplyOwner)
       .toHaveBeenCalledWith(threadId, commentId, replyId, credentialId);
     expect(mockReplyRepository.deleteReply)

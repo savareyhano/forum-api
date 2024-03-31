@@ -50,6 +50,10 @@ describe('UserRepositoryPostgres', () => {
       // Assert
       const users = await UsersTableTestHelper.findUsersById('user-123');
       expect(users).toHaveLength(1);
+      expect(users[0].id).toEqual('user-123');
+      expect(users[0].username).toEqual('dicoding');
+      expect(users[0].password).toEqual('secret_password');
+      expect(users[0].fullname).toEqual('Dicoding Indonesia');
     });
 
     it('should return registered user correctly', async () => {

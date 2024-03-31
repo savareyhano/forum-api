@@ -27,6 +27,8 @@ describe('DeleteCommentUseCase', () => {
     await deleteCommentUseCase.execute(threadId, commentId, credentialId);
 
     // Assert
+    expect(mockThreadRepository.verifyThread)
+      .toHaveBeenCalledWith(threadId);
     expect(mockCommentRepository.verifyCommentOwner)
       .toHaveBeenCalledWith(threadId, commentId, credentialId);
     expect(mockCommentRepository.deleteComment)
