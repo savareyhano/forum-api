@@ -31,7 +31,7 @@ describe('DeleteReplyUseCase', () => {
       threadRepository: mockThreadRepository,
     });
 
-    // Act
+    // Action
     await deleteReplyUseCase.execute(threadId, commentId, replyId, credentialId);
 
     // Assert

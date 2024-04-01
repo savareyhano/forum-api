@@ -8,7 +8,7 @@ describe('a AddedReply entities', () => {
       content: 'testing',
     };
 
-    // Action and Assert
+    // Action & Assert
     expect(() => new AddedReply(payload)).toThrowError('ADDED_REPLY.NOT_CONTAIN_NEEDED_PROPERTY');
   });
 
@@ -20,7 +20,7 @@ describe('a AddedReply entities', () => {
       owner: true,
     };
 
-    // Action and Assert
+    // Action & Assert
     expect(() => new AddedReply(payload)).toThrowError('ADDED_REPLY.NOT_MEET_DATA_TYPE_SPECIFICATION');
   });
 

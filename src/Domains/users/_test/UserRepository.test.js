@@ -5,7 +5,7 @@ describe('UserRepository interface', () => {
     // Arrange
     const userRepository = new UserRepository();
 
-    // Action and Assert
+    // Action & Assert
     await expect(userRepository.addUser({})).rejects.toThrowError('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED');
     await expect(userRepository.verifyAvailableUsername('')).rejects.toThrowError('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED');
     await expect(userRepository.getPasswordByUsername('')).rejects.toThrowError('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED');

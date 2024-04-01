@@ -8,7 +8,7 @@ describe('a AddedThread entities', () => {
       title: 'test',
     };
 
-    // Action and Assert
+    // Action & Assert
     expect(() => new AddedThread(payload)).toThrowError('ADDED_THREAD.NOT_CONTAIN_NEEDED_PROPERTY');
   });
 
@@ -20,7 +20,7 @@ describe('a AddedThread entities', () => {
       owner: true,
     };
 
-    // Action and Assert
+    // Action & Assert
     expect(() => new AddedThread(payload)).toThrowError('ADDED_THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION');
   });
 

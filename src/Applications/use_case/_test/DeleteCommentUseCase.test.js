@@ -25,7 +25,7 @@ describe('DeleteCommentUseCase', () => {
       threadRepository: mockThreadRepository,
     });
 
-    // Act
+    // Action
     await deleteCommentUseCase.execute(threadId, commentId, credentialId);
 
     // Assert

@@ -24,7 +24,7 @@ describe('BcryptEncryptionHelper', () => {
       // Arrange
       const bcryptEncryptionHelper = new BcryptEncryptionHelper(bcrypt);
 
-      // Act & Assert
+      // Action & Assert
       await expect(bcryptEncryptionHelper.comparePassword('plain_password', 'encrypted_password'))
         .rejects
         .toThrow(AuthenticationError);
@@ -36,7 +36,7 @@ describe('BcryptEncryptionHelper', () => {
       const plainPassword = 'secret';
       const encryptedPassword = await bcryptEncryptionHelper.hash(plainPassword);
 
-      // Act & Assert
+      // Action & Assert
       await expect(bcryptEncryptionHelper.comparePassword(plainPassword, encryptedPassword))
         .resolves.not.toThrow(AuthenticationError);
     });

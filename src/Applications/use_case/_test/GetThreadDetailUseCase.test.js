@@ -23,7 +23,7 @@ describe('GetThreadDetailUseCase', () => {
         replyRepository: {},
       });
 
-      // Action and Assert
+      // Action & Assert
       const mappedComment = useCase._mapComment(deletedComment);
       expect(mappedComment.content).toBe('**komentar telah dihapus**');
     });
@@ -45,7 +45,7 @@ describe('GetThreadDetailUseCase', () => {
         replyRepository: {},
       });
 
-      // Action and Assert
+      // Action & Assert
       const mappedComment = useCase._mapComment(notDeletedComment);
       expect(mappedComment.content).toBe('testing');
     });
@@ -69,7 +69,7 @@ describe('GetThreadDetailUseCase', () => {
         replyRepository: {},
       });
 
-      // Action and Assert
+      // Action & Assert
       const mappedReply = useCase._mapReply(deletedReply);
       expect(mappedReply.content).toBe('**balasan telah dihapus**');
     });
@@ -91,7 +91,7 @@ describe('GetThreadDetailUseCase', () => {
         replyRepository: {},
       });
 
-      // Action and Assert
+      // Action & Assert
       const mappedReply = useCase._mapReply(notDeletedReply);
       expect(mappedReply.content).toBe('testing');
     });

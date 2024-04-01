@@ -5,7 +5,7 @@ describe('a NewComment entities', () => {
     // Arrange
     const payload = {};
 
-    // Action and Assert
+    // Action & Assert
     expect(() => new NewComment(payload)).toThrowError('NEW_COMMENT.NOT_CONTAIN_NEEDED_PROPERTY');
   });
 
@@ -15,7 +15,7 @@ describe('a NewComment entities', () => {
       content: 123,
     };
 
-    // Action and Assert
+    // Action & Assert
     expect(() => new NewComment(payload)).toThrowError('NEW_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION');
   });
 

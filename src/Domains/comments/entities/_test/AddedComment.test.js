@@ -8,7 +8,7 @@ describe('a AddedComment entities', () => {
       content: 'testing',
     };
 
-    // Action and Assert
+    // Action & Assert
     expect(() => new AddedComment(payload)).toThrowError('ADDED_COMMENT.NOT_CONTAIN_NEEDED_PROPERTY');
   });
 
@@ -20,7 +20,7 @@ describe('a AddedComment entities', () => {
       owner: true,
     };
 
-    // Action and Assert
+    // Action & Assert
     expect(() => new AddedComment(payload)).toThrowError('ADDED_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION');
   });
 
