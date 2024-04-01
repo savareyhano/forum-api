@@ -63,6 +63,13 @@ describe('GetThreadDetailUseCase', () => {
     expect(mockThreadRepository.verifyThreadExist).toBeCalledWith(threadId);
     expect(mockCommentRepository.getCommentsByThreadId).toBeCalledWith(threadId);
     expect(mockReplyRepository.getRepliesByThreadId).toBeCalledWith(threadId);
+    const expectedComment = {
+      ...getThreadDetailUseCase._mapComment(mockComments),
+      replies: [getThreadDetailUseCase._mapReply(mockReplies)],
+    };
+    expect(getThreadDetail.comments[0]).toStrictEqual(expectedComment);
+    expect(getThreadDetail.comments[0].replies[0])
+      .toStrictEqual(getThreadDetailUseCase._mapReply(mockReplies));
     expect(getThreadDetail).toStrictEqual(new ThreadDetail({
       id: 'thread-123',
       title: 'test',

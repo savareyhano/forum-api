@@ -1,4 +1,4 @@
-const config = require('../../Commons/utils/config');
+const config = require('../../Commons/config');
 const AuthenticationTokenManager = require('../../Applications/security/AuthenticationTokenManager');
 const InvariantError = require('../../Commons/exceptions/InvariantError');
 
