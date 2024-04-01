@@ -3,7 +3,6 @@ const UsersTableTestHelper = require('../../../../tests/UsersTableTestHelper');
 const NotFoundError = require('../../../Commons/exceptions/NotFoundError');
 const NewThread = require('../../../Domains/threads/entities/NewThread');
 const AddedThread = require('../../../Domains/threads/entities/AddedThread');
-const ThreadDetail = require('../../../Domains/threads/entities/ThreadDetail');
 const pool = require('../../database/postgres/pool');
 const ThreadRepositoryPostgres = require('../ThreadRepositoryPostgres');
 
@@ -89,7 +88,7 @@ describe('ThreadRepositoryPostgres', () => {
   });
 
   describe('getThreadById function', () => {
-    it('should return thread detail correctly', async () => {
+    it('should return thread detail based on thread id correctly', async () => {
       // Arrange
       await UsersTableTestHelper.addUser({ id: 'user-123', username: 'dicoding' });
       await ThreadsTableTestHelper.addThread({
@@ -101,14 +100,13 @@ describe('ThreadRepositoryPostgres', () => {
       const threadDetail = await threadRepositoryPostgres.getThreadById('thread-123');
 
       // Assert
-      expect(threadDetail).toStrictEqual(new ThreadDetail({
+      expect(threadDetail).toStrictEqual({
         id: 'thread-123',
         title: 'test',
         body: 'testing',
         date: '2021-08-08T07:19:09.775Z',
         username: 'dicoding',
-        comments: [],
-      }));
+      });
     });
   });
 });
