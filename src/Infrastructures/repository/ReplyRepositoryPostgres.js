@@ -10,9 +10,9 @@ class ReplyRepositoryPostgres extends ReplyRepository {
     this._idGenerator = idGenerator;
   }
 
-  async verifyReply(threadId, commentId, replyId) {
+  async verifyReplyExist(threadId, commentId, replyId) {
     const query = {
-      text: 'SELECT * FROM replies WHERE id = $1 AND comment_id = $2 AND thread_id = $3',
+      text: 'SELECT 1 FROM replies WHERE id = $1 AND comment_id = $2 AND thread_id = $3',
       values: [replyId, commentId, threadId],
     };
 
@@ -21,12 +21,17 @@ class ReplyRepositoryPostgres extends ReplyRepository {
     if (!result.rowCount) {
       throw new NotFoundError('reply tidak ditemukan');
     }
-
-    return result.rows[0];
   }
 
   async verifyReplyOwner(threadId, commentId, replyId, credentialId) {
-    const reply = await this.verifyReply(threadId, commentId, replyId);
+    const query = {
+      text: 'SELECT owner FROM replies WHERE id = $1 AND comment_id = $2 AND thread_id = $3',
+      values: [replyId, commentId, threadId],
+    };
+
+    const result = await this._pool.query(query);
+
+    const reply = result.rows[0];
 
     if (reply.owner !== credentialId) {
       throw new AuthorizationError('tidak sah');

@@ -16,14 +16,14 @@ describe('ThreadRepositoryPostgres', () => {
     await pool.end();
   });
 
-  describe('verifyThread function', () => {
+  describe('verifyThreadExist function', () => {
     it('should throw NotFoundError when thread does not exist or invalid', async () => {
       // Arrange
       const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {});
       const threadId = 'thread-123';
 
       // Action & Assert
-      await expect(threadRepositoryPostgres.verifyThread(threadId))
+      await expect(threadRepositoryPostgres.verifyThreadExist(threadId))
         .rejects
         .toThrowError(NotFoundError);
     });
@@ -34,7 +34,7 @@ describe('ThreadRepositoryPostgres', () => {
       const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {});
 
       // Action & Assert
-      await expect(threadRepositoryPostgres.verifyThread(threadId))
+      await expect(threadRepositoryPostgres.verifyThreadExist(threadId))
         .resolves.not.toThrowError(NotFoundError);
       const threads = await ThreadsTableTestHelper.findThreadsById(threadId);
       expect(threads).toHaveLength(1);

@@ -10,9 +10,9 @@ class CommentRepositoryPostgres extends CommentRepository {
     this._idGenerator = idGenerator;
   }
 
-  async verifyComment(threadId, commentId) {
+  async verifyCommentExist(threadId, commentId) {
     const query = {
-      text: 'SELECT * FROM comments WHERE id = $1 AND thread_id = $2',
+      text: 'SELECT 1 FROM comments WHERE id = $1 AND thread_id = $2',
       values: [commentId, threadId],
     };
 
@@ -21,12 +21,17 @@ class CommentRepositoryPostgres extends CommentRepository {
     if (!result.rowCount) {
       throw new NotFoundError('comment tidak ditemukan');
     }
-
-    return result.rows[0];
   }
 
   async verifyCommentOwner(threadId, commentId, credentialId) {
-    const comment = await this.verifyComment(threadId, commentId);
+    const query = {
+      text: 'SELECT owner FROM comments WHERE id = $1 AND thread_id = $2',
+      values: [commentId, threadId],
+    };
+
+    const result = await this._pool.query(query);
+
+    const comment = result.rows[0];
 
     if (comment.owner !== credentialId) {
       throw new AuthorizationError('tidak sah');

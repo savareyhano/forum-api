@@ -30,7 +30,7 @@ describe('ReplyRepositoryPostgres', () => {
       const replyId = 'reply-123';
 
       // Action & Assert
-      await expect(replyRepositoryPostgres.verifyReply(threadId, commentId, replyId))
+      await expect(replyRepositoryPostgres.verifyReplyExist(threadId, commentId, replyId))
         .rejects
         .toThrowError(NotFoundError);
     });
@@ -44,7 +44,7 @@ describe('ReplyRepositoryPostgres', () => {
       const replyRepositoryPostgres = new ReplyRepositoryPostgres(pool, {});
 
       // Action & Assert
-      await expect(replyRepositoryPostgres.verifyReply(threadId, commentId, replyId))
+      await expect(replyRepositoryPostgres.verifyReplyExist(threadId, commentId, replyId))
         .resolves.not.toThrowError(NotFoundError);
       const replies = await RepliesTableTestHelper.findRepliesById(replyId);
       expect(replies).toHaveLength(1);
