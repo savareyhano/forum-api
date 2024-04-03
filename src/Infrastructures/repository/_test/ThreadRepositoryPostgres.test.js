@@ -30,7 +30,9 @@ describe('ThreadRepositoryPostgres', () => {
     it('should not throw NotFoundError when thread does exist or valid', async () => {
       // Arrange
       const threadId = 'thread-234';
-      await ThreadsTableTestHelper.addThread({ id: threadId });
+      const owner = 'user-123';
+      await UsersTableTestHelper.addUser({ id: owner, username: 'dicoding' });
+      await ThreadsTableTestHelper.addThread({ id: threadId, owner });
       const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {});
 
       // Action & Assert
@@ -52,6 +54,7 @@ describe('ThreadRepositoryPostgres', () => {
       const fakeIdGenerator = () => '123'; // stub!
       const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, fakeIdGenerator);
       const credentialId = 'user-123';
+      await UsersTableTestHelper.addUser({ id: credentialId, username: 'dicoding' });
 
       // Action
       await threadRepositoryPostgres.addThread(newThread, credentialId);
@@ -74,6 +77,7 @@ describe('ThreadRepositoryPostgres', () => {
       const fakeIdGenerator = () => '123'; // stub!
       const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, fakeIdGenerator);
       const credentialId = 'user-123';
+      await UsersTableTestHelper.addUser({ id: credentialId, username: 'dicoding' });
 
       // Action
       const addedThread = await threadRepositoryPostgres.addThread(newThread, credentialId);
@@ -90,9 +94,10 @@ describe('ThreadRepositoryPostgres', () => {
   describe('getThreadById function', () => {
     it('should return thread detail based on thread id correctly', async () => {
       // Arrange
-      await UsersTableTestHelper.addUser({ id: 'user-123', username: 'dicoding' });
+      const owner = 'user-123';
+      await UsersTableTestHelper.addUser({ id: owner, username: 'dicoding' });
       await ThreadsTableTestHelper.addThread({
-        id: 'thread-123', title: 'test', body: 'testing', date: '2021-08-08T07:19:09.775Z', owner: 'user-123',
+        id: 'thread-123', title: 'test', body: 'testing', date: '2021-08-08T07:19:09.775Z', owner,
       });
       const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {});
 

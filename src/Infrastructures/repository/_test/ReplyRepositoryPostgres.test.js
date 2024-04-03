@@ -40,7 +40,11 @@ describe('ReplyRepositoryPostgres', () => {
       const threadId = 'thread-456';
       const commentId = 'comment-123';
       const replyId = 'reply-321';
-      await RepliesTableTestHelper.addReply({ id: replyId, threadId, commentId });
+      const owner = 'user-123';
+      await UsersTableTestHelper.addUser({ id: owner, username: 'dicoding' });
+      await RepliesTableTestHelper.addReply({
+        id: replyId, threadId, commentId, owner,
+      });
       const replyRepositoryPostgres = new ReplyRepositoryPostgres(pool, {});
 
       // Action & Assert
@@ -61,8 +65,11 @@ describe('ReplyRepositoryPostgres', () => {
       const threadId = 'thread-456';
       const commentId = 'comment-123';
       const credentialId = 'user-123';
+      const anotherUser = 'user-789';
+      await UsersTableTestHelper.addUser({ id: credentialId, username: 'dicoding' });
+      await UsersTableTestHelper.addUser({ id: anotherUser, username: 'johndoe' });
       await RepliesTableTestHelper.addReply({
-        id: replyId, threadId, commentId, owner: 'user-789',
+        id: replyId, threadId, commentId, owner: anotherUser,
       });
       const replyRepositoryPostgres = new ReplyRepositoryPostgres(pool, {});
 
@@ -84,6 +91,7 @@ describe('ReplyRepositoryPostgres', () => {
       const threadId = 'thread-456';
       const commentId = 'comment-123';
       const credentialId = 'user-123';
+      await UsersTableTestHelper.addUser({ id: credentialId, username: 'dicoding' });
       await RepliesTableTestHelper.addReply({
         id: replyId, threadId, commentId, owner: credentialId,
       });
@@ -107,6 +115,8 @@ describe('ReplyRepositoryPostgres', () => {
       // Arrange
       const threadId = 'thread-234';
       const commentId = 'comment-234';
+      const credentialId = 'user-123';
+      await UsersTableTestHelper.addUser({ id: credentialId, username: 'dicoding' });
       await ThreadsTableTestHelper.addThread({ id: threadId, title: 'test' });
       await CommentsTableTestHelper.addComment({ id: commentId, content: 'testing' });
       const newReply = new NewReply({
@@ -114,7 +124,6 @@ describe('ReplyRepositoryPostgres', () => {
       });
       const fakeIdGenerator = () => '123'; // stub!
       const replyRepositoryPostgres = new ReplyRepositoryPostgres(pool, fakeIdGenerator);
-      const credentialId = 'user-123';
 
       // Action
       await replyRepositoryPostgres.addReply(threadId, commentId, newReply, credentialId);
@@ -133,6 +142,8 @@ describe('ReplyRepositoryPostgres', () => {
       // Arrange
       const threadId = 'thread-234';
       const commentId = 'comment-234';
+      const credentialId = 'user-123';
+      await UsersTableTestHelper.addUser({ id: credentialId, username: 'dicoding' });
       await ThreadsTableTestHelper.addThread({ id: threadId, title: 'test' });
       await CommentsTableTestHelper.addComment({ id: commentId, content: 'testing' });
       const newReply = new NewReply({
@@ -140,7 +151,6 @@ describe('ReplyRepositoryPostgres', () => {
       });
       const fakeIdGenerator = () => '123'; // stub!
       const replyRepositoryPostgres = new ReplyRepositoryPostgres(pool, fakeIdGenerator);
-      const credentialId = 'user-123';
 
       // Action
       const addedReply = await replyRepositoryPostgres.addReply(
@@ -166,7 +176,11 @@ describe('ReplyRepositoryPostgres', () => {
       const threadId = 'thread-234';
       const commentId = 'comment-234';
       const replyId = 'reply-234';
-      await RepliesTableTestHelper.addReply({ id: replyId, threadId, commentId });
+      const owner = 'user-123';
+      await UsersTableTestHelper.addUser({ id: owner, username: 'dicoding' });
+      await RepliesTableTestHelper.addReply({
+        id: replyId, threadId, commentId, owner,
+      });
 
       // Action
       await replyRepository.deleteReply(threadId, commentId, replyId);
@@ -181,9 +195,10 @@ describe('ReplyRepositoryPostgres', () => {
   describe('getRepliesByThreadId function', () => {
     it('should return replies based on thread id correctly', async () => {
       // Arrange
-      await UsersTableTestHelper.addUser({ id: 'user-123', username: 'dicoding' });
+      const owner = 'user-123';
+      await UsersTableTestHelper.addUser({ id: owner, username: 'dicoding' });
       await RepliesTableTestHelper.addReply({
-        id: 'reply-123', threadId: 'thread-123', commentId: 'comment-123', content: 'testing', date: '2021-08-08T07:19:09.775Z', owner: 'user-123', isDelete: false,
+        id: 'reply-123', threadId: 'thread-123', commentId: 'comment-123', content: 'testing', date: '2021-08-08T07:19:09.775Z', owner, isDelete: false,
       });
       const repliesRepositoryPostgres = new ReplyRepositoryPostgres(pool, {});
 

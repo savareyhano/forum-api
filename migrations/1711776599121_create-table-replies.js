@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 exports.up = (pgm) => {
   pgm.createTable('replies', {
     id: {
@@ -20,6 +19,7 @@ exports.up = (pgm) => {
     date: {
       type: 'TEXT',
       notNull: true,
+      default: pgm.func('current_timestamp'),
     },
     owner: {
       type: 'TEXT',
@@ -31,6 +31,7 @@ exports.up = (pgm) => {
       default: false,
     },
   });
+  pgm.addConstraint('replies', 'fk_replies.owner_users.id', 'FOREIGN KEY(owner) REFERENCES users(id) ON DELETE CASCADE');
 };
 
 exports.down = (pgm) => {

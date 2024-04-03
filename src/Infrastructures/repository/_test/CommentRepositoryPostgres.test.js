@@ -36,7 +36,9 @@ describe('CommentRepositoryPostgres', () => {
       // Arrange
       const threadId = 'thread-456';
       const commentId = 'comment-321';
-      await CommentsTableTestHelper.addComment({ id: commentId, threadId });
+      const owner = 'user-123';
+      await UsersTableTestHelper.addUser({ id: owner, username: 'dicoding' });
+      await CommentsTableTestHelper.addComment({ id: commentId, threadId, owner });
       const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {});
 
       // Action & Assert
@@ -55,7 +57,10 @@ describe('CommentRepositoryPostgres', () => {
       const commentId = 'comment-123';
       const threadId = 'thread-456';
       const credentialId = 'user-123';
-      await CommentsTableTestHelper.addComment({ id: commentId, threadId, owner: 'user-789' });
+      const anotherUser = 'user-789';
+      await UsersTableTestHelper.addUser({ id: credentialId, username: 'dicoding' });
+      await UsersTableTestHelper.addUser({ id: anotherUser, username: 'johndoe' });
+      await CommentsTableTestHelper.addComment({ id: commentId, threadId, owner: anotherUser });
       const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {});
 
       // Action & Assert
@@ -73,6 +78,7 @@ describe('CommentRepositoryPostgres', () => {
       const commentId = 'comment-123';
       const threadId = 'thread-456';
       const credentialId = 'user-123';
+      await UsersTableTestHelper.addUser({ id: credentialId, username: 'dicoding' });
       await CommentsTableTestHelper.addComment({ id: commentId, threadId, owner: credentialId });
       const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {});
 
@@ -91,13 +97,14 @@ describe('CommentRepositoryPostgres', () => {
     it('should persist new comment and return added comment correctly', async () => {
       // Arrange
       const threadId = 'thread-234';
+      const credentialId = 'user-123';
+      await UsersTableTestHelper.addUser({ id: credentialId, username: 'dicoding' });
       await ThreadsTableTestHelper.addThread({ id: threadId, title: 'test' });
       const newComment = new NewComment({
         content: 'testing',
       });
       const fakeIdGenerator = () => '123'; // stub!
       const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, fakeIdGenerator);
-      const credentialId = 'user-123';
 
       // Action
       await commentRepositoryPostgres.addComment(threadId, newComment, credentialId);
@@ -114,13 +121,14 @@ describe('CommentRepositoryPostgres', () => {
     it('should return added comment correctly', async () => {
       // Arrange
       const threadId = 'thread-234';
+      const credentialId = 'user-123';
+      await UsersTableTestHelper.addUser({ id: credentialId, username: 'dicoding' });
       await ThreadsTableTestHelper.addThread({ id: threadId, title: 'test' });
       const newComment = new NewComment({
         content: 'testing',
       });
       const fakeIdGenerator = () => '123'; // stub!
       const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, fakeIdGenerator);
-      const credentialId = 'user-123';
 
       // Action
       const addedComment = await commentRepositoryPostgres.addComment(
@@ -144,7 +152,9 @@ describe('CommentRepositoryPostgres', () => {
       const commentRepository = new CommentRepositoryPostgres(pool);
       const threadId = 'thread-234';
       const commentId = 'comment-234';
-      await CommentsTableTestHelper.addComment({ id: commentId, threadId });
+      const owner = 'user-123';
+      await UsersTableTestHelper.addUser({ id: owner, username: 'dicoding' });
+      await CommentsTableTestHelper.addComment({ id: commentId, threadId, owner });
 
       // Action
       await commentRepository.deleteComment(threadId, commentId);
@@ -159,9 +169,10 @@ describe('CommentRepositoryPostgres', () => {
   describe('getCommentsByThreadId function', () => {
     it('should return comments based on thread id correctly', async () => {
       // Arrange
-      await UsersTableTestHelper.addUser({ id: 'user-123', username: 'dicoding' });
+      const owner = 'user-123';
+      await UsersTableTestHelper.addUser({ id: owner, username: 'dicoding' });
       await CommentsTableTestHelper.addComment({
-        id: 'comment-123', threadId: 'thread-123', owner: 'user-123', date: '2021-08-08T07:19:09.775Z', content: 'testing', isDelete: false,
+        id: 'comment-123', threadId: 'thread-123', owner, date: '2021-08-08T07:19:09.775Z', content: 'testing', isDelete: false,
       });
       const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {});
 
