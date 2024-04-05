@@ -17,6 +17,31 @@ describe('/threads/{threadId}/comments endpoint', () => {
   });
 
   describe('when POST /threads/{threadId}/comments', () => {
+    it('should response 401 when attempting to add comment without authentication', async () => {
+      // Arrange
+      const requestPayload = {
+        content: 'testing',
+      };
+      const threadId = 'thread-123';
+      const owner = 'user-123';
+      await UsersTableTestHelper.addUser({ id: owner, username: 'dicoding' });
+      await ThreadsTableTestHelper.addThread({ id: threadId, owner });
+      const server = await createServer(container);
+
+      // Action
+      const response = await server.inject({
+        method: 'POST',
+        url: `/threads/${threadId}/comments`,
+        payload: requestPayload,
+      });
+
+      // Assert
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(401);
+      expect(responseJson.error).toEqual('Unauthorized');
+      expect(responseJson.message).toEqual('Missing authentication');
+    });
+
     it('should response 404 when thread does not exist', async () => {
       // Arrange
       const requestPayload = {
@@ -243,6 +268,29 @@ describe('/threads/{threadId}/comments endpoint', () => {
   });
 
   describe('when DELETE /threads/{threadId}/comments/{commentId}', () => {
+    it('should response 401 when attempting to delete comment without authentication', async () => {
+      // Arrange
+      const threadId = 'thread-123';
+      const commentId = 'comment-123';
+      const owner = 'user-123';
+      await UsersTableTestHelper.addUser({ id: owner, username: 'dicoding' });
+      await ThreadsTableTestHelper.addThread({ id: threadId, owner });
+      await CommentsTableTestHelper.addComment({ id: commentId, threadId, owner });
+      const server = await createServer(container);
+
+      // Action
+      const response = await server.inject({
+        method: 'DELETE',
+        url: `/threads/${threadId}/comments/${commentId}`,
+      });
+
+      // Assert
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(401);
+      expect(responseJson.error).toEqual('Unauthorized');
+      expect(responseJson.message).toEqual('Missing authentication');
+    });
+
     it('should response 404 when thread does not exist', async () => {
       // Arrange
       const server = await createServer(container);

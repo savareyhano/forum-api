@@ -48,6 +48,7 @@ describe('CommentRepositoryPostgres', () => {
       expect(comments).toHaveLength(1);
       expect(comments[0].id).toEqual(commentId);
       expect(comments[0].thread_id).toEqual(threadId);
+      expect(comments[0].owner).toEqual(owner);
     });
   });
 
@@ -180,13 +181,12 @@ describe('CommentRepositoryPostgres', () => {
       const comments = await commentRepositoryPostgres.getCommentsByThreadId('thread-123');
 
       // Assert
-      expect(comments).toStrictEqual([{
-        id: 'comment-123',
-        username: 'dicoding',
-        date: '2021-08-08T07:19:09.775Z',
-        content: 'testing',
-        is_delete: false,
-      }]);
+      expect(comments).toHaveLength(1);
+      expect(comments[0].id).toEqual('comment-123');
+      expect(comments[0].username).toEqual('dicoding');
+      expect(comments[0].date).toEqual('2021-08-08T07:19:09.775Z');
+      expect(comments[0].content).toEqual('testing');
+      expect(comments[0].is_delete).toEqual(false);
     });
   });
 });
