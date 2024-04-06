@@ -57,6 +57,6 @@ describe('RefreshAuthenticationUseCase', () => {
       .toBeCalledWith(useCasePayload.refreshToken);
     expect(mockAuthenticationTokenManager.createAccessToken)
       .toBeCalledWith({ username: 'dicoding', id: 'user-123' });
-    expect(accessToken).toEqual('some_new_access_token');
+    expect(accessToken).toStrictEqual('some_new_access_token');
   });
 });

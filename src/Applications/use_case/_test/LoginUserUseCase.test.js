@@ -24,8 +24,12 @@ describe('GetAuthenticationUseCase', () => {
     // Mocking
     mockUserRepository.getPasswordByUsername = jest.fn(() => Promise.resolve('encrypted_password'));
     mockPasswordHash.comparePassword = jest.fn(() => Promise.resolve());
-    mockAuthenticationTokenManager.createAccessToken = jest.fn(() => Promise.resolve(mockedAuthentication.accessToken));
-    mockAuthenticationTokenManager.createRefreshToken = jest.fn(() => Promise.resolve(mockedAuthentication.refreshToken));
+    mockAuthenticationTokenManager.createAccessToken = jest.fn(
+      () => Promise.resolve(mockedAuthentication.accessToken),
+    );
+    mockAuthenticationTokenManager.createRefreshToken = jest.fn(
+      () => Promise.resolve(mockedAuthentication.refreshToken),
+    );
     mockUserRepository.getIdByUsername = jest.fn(() => Promise.resolve('user-123'));
     mockAuthenticationRepository.addToken = jest.fn(() => Promise.resolve());
 
@@ -41,7 +45,7 @@ describe('GetAuthenticationUseCase', () => {
     const actualAuthentication = await loginUserUseCase.execute(useCasePayload);
 
     // Assert
-    expect(actualAuthentication).toEqual(new NewAuth({
+    expect(actualAuthentication).toStrictEqual(new NewAuth({
       accessToken: 'access_token',
       refreshToken: 'refresh_token',
     }));

@@ -55,6 +55,7 @@ describe('ReplyRepositoryPostgres', () => {
       expect(replies[0].id).toEqual(replyId);
       expect(replies[0].thread_id).toEqual(threadId);
       expect(replies[0].comment_id).toEqual(commentId);
+      expect(replies[0].owner).toEqual(owner);
     });
   });
 
@@ -206,14 +207,13 @@ describe('ReplyRepositoryPostgres', () => {
       const replies = await repliesRepositoryPostgres.getRepliesByThreadId('thread-123');
 
       // Assert
-      expect(replies).toStrictEqual([{
-        id: 'reply-123',
-        content: 'testing',
-        date: '2021-08-08T07:19:09.775Z',
-        username: 'dicoding',
-        is_delete: false,
-        comment_id: 'comment-123',
-      }]);
+      expect(replies).toHaveLength(1);
+      expect(replies[0].id).toEqual('reply-123');
+      expect(replies[0].content).toEqual('testing');
+      expect(replies[0].date).toEqual('2021-08-08T07:19:09.775Z');
+      expect(replies[0].username).toEqual('dicoding');
+      expect(replies[0].is_delete).toEqual(false);
+      expect(replies[0].comment_id).toEqual('comment-123');
     });
   });
 });
