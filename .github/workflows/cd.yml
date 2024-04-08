@@ -22,8 +22,8 @@ jobs:
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
             [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-            cd ~/forum-api
+            cd ${{ secrets.DIRECTORY_PATH }}
             git pull origin main
             npm install
             npm run migrate up
-            pm2 restart forum
+            pm2 restart ${{ secrets.PM2_APP_NAME }}
